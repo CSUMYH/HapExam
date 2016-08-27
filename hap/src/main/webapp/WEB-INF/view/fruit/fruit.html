@@ -1,0 +1,184 @@
+<#--
+ * description: Fruit.html
+ * version: 1.0 
+ * author:taotao.xu@hand-china.com
+ * #{copyright}#
+ * 
+-->
+<#include "../include/head.html">
+<body style="padding: 10px;">
+	<form id="fruitForm"></form>
+    <div id="fruitGrid" style="margin: 0; padding: 0"></div>
+    <script type="text/javascript">
+    function editFruitItem(id){
+        $.ligerDialog.open({
+            width : 850,
+            height : 300,
+            title : '<@spring.message "resource.itemallocation"/>',
+            url : 'fruit_item.html?fruitId=' + id
+        });     
+    }
+    
+    $(function() {
+        
+    	debugger;
+        window['fruitForm'] = $("#fruitForm").ligerForm({
+            fields : [ {
+                type : 'text',
+                label : '<@spring.message "com.hand.hap.fruit.fruitname"/>',
+                name : 'fruitName',
+                newline : false,
+                width: 120
+            }, {
+                type : 'text',
+                label : '<@spring.message "com.hand.hap.fruit.fruitdescription"/>',
+                name : 'fruitDescription',
+                width: 120
+            }],
+            buttons : [ {
+                text : '<@spring.message "hap.query"/>',
+                disabled : false,
+                width : 60,
+                click : function() {
+                    Hap.gridQuery({
+                        form : fruitForm,
+                        grid : fruitGrid
+                    })
+                }
+            },{
+           	 text : '<@spring.message "sysfile.upload"/>',
+             disabled : false,
+             width : 60,
+             click : function() {
+            	 $.ligerDialog.open({
+                     width : 850,
+                     height : 500,
+                     title : '<@spring.message "resource.itemallocation"/>',
+                     url : 'upload_fruit.html'
+                 }); 
+             }   	
+            },{
+              	 text : '<@spring.message "hap.query"/>',
+                 disabled : false,
+                 width : 60,
+                 click : function() {
+                 }   	
+            }]
+        
+        });
+
+        window['fruitGrid'] = $("#fruitGrid").ligerGrid({
+            unSetValidateAttr : false,
+            columns : [ {
+                display : '<@spring.message "com.hand.hap.fruit.fruitid"/>',
+                name : 'fruitId',
+                align : 'left',
+                width : 120
+            },{
+                display : 'fruitCode',
+                name : 'fruitCode',
+                align : 'left',
+                width : 120,
+                editor : {
+                    type : 'text'
+                }, 
+                validate: {
+                    required: true
+                }
+            },{
+                display : '<@spring.message "com.hand.hap.fruit.time"/>',
+                name : 'fruitName',
+                align : 'left',
+                width : 120,
+                editor : {
+                    type : 'text'
+                },
+                validate: {
+                    required: true
+                }
+            },{
+                display : '<@spring.message "com.hand.hap.fruit.fruitname"/>',
+                name : 'fruitName',
+                align : 'left',
+                width : 120,
+                editor : {
+                    type : 'text'
+                },
+                validate: {
+                    required: true
+                }
+            }, {
+                display : '<@spring.message "com.hand.hap.fruit.fruitdescription"/>',
+                name : 'fruitDescription',
+                align : 'left',
+                width : 150,
+                editor : {
+          
+                	  type : 'tl',
+                      idField:'fruitId',
+                      dto:'com.hand.hap.fruit.dto.Fruit'
+          		  }
+            },{
+                display : '<@spring.message "resource.resourceitem"/>',
+                width : 100,
+                align : 'center',
+                render : function(rowdata) {
+                    if (rowdata.fruitId) {
+                        return '<a href="javascript:void(0);" onclick="editFruitItem(' + rowdata.fruitId + ')"><@spring.message "hap.edit"/></a>'
+                    }
+                }
+			} ],
+            url : '${base.contextPath}/ass/fruit/query',
+            toolbar : {
+                items : [ {
+                    text : '<@spring.message "hap.new"/>',
+                    disable : false,
+                    click : function() {
+                        fruitGrid.addRow({})
+                    },
+                    icon : 'add'
+                }, {
+                    line : true
+                }, {
+                    text : '<@spring.message "hap.delete"/>',
+                    click : function() {
+                       	    Hap.gridDelete({
+                            grid : fruitGrid,
+                            url : '${base.contextPath}/ass/fruit/delete'
+                        }) 
+                    	fruitGrid.deleteSelectedRow();
+                    },
+                    icon : 'delete'
+                }, {
+                    line : true
+                }, {
+                    text : '<@spring.message "hap.save"/>',
+                    click : function() {
+                        Hap.gridSave({
+                            grid : fruitGrid,
+                            url : '${base.contextPath}/ass/fruit/submit'
+                        })
+                    },
+                    icon : 'save'
+                } ]
+            },
+            enabledEdit : true,
+            width : '99%',
+            height : '98%',
+            checkbox : true
+        });
+    });
+    
+    
+    Hap.setFormDefaultBtn(closeUploadDialog, function(){
+        if(Hap.validateForm(attForm)) {
+            uploader.option('formData', {
+                sourceType: attForm.getData().sourceType,
+                sourceKey: '1' 
+            });
+            uploader.upload();
+        }
+    });
+    </script>
+</body>
+</html>

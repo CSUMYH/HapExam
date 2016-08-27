@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ #{copyright}#
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.hap.order.mapper.OrderResultMapper">
+    <resultMap id="BaseResultMap" type="com.hand.hap.order.dto.OrderResult" extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="HEADER_ID" property="headerId" jdbcType="DECIMAL"/>
+        <result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR"/>
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR"/>
+        <result column="ORDER_DATE" property="orderDate" jdbcType="TIMESTAMP"/>
+		<result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR"/>
+		<result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL"/>
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
+		<result column="REQUEST_ID" property="requestId" jdbcType="DECIMAL"/>
+		<result column="PROGRAM_ID" property="programId" jdbcType="DECIMAL"/>
+		<result column="ITEM_DESCRIPTION" property="itemDescription" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	<select id="selectByOrderResult" parameterType="com.hand.hap.order.dto.OrderResult" resultMap="BaseResultMap">
+	SELECT * FROM (SELECT hm.ITEM_DESCRIPTION ,h.ORDER_NUMBER,c.COMPANY_NAME ,cs.CUSTOMER_NAME,h.ORDER_DATE,h.ORDER_STATUS ,hl.UNIT_SELLING_PRICE*hl.LINE_NUMBER as sals
+ 	FROM hap_om_order_headers h,hap_org_companys c , hap_ar_customers cs ,hap_inv_inventory_items hm,hap_om_order_lines hl 
+	WHERE h.COMPANY_ID = c.COMPANY_ID and h.CUSTOMER_ID = cs.CUSTOMER_ID  and hm.INVENTORY_ITEM_ID= hl.INVENTORY_ITEM_ID
+    and hl.HEADER_ID = h.HEADER_ID) as a
+		<where>
+        	<if test="companyName != null">
+                AND a.COMPANY_NAME = #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="customerName != null">
+                AND a.CUSTOMER_NAME like #{customerName,jdbcType=VARCHAR}
+            </if>
+            <if test="orderNumber != null">
+                AND a.ORDER_NUMBER like #{orderNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="orderStatus != null">
+                AND a.ORDER_STATUS like #{orderStatus,jdbcType=VARCHAR}
+            </if>
+			<if test="itemDescription != null">
+                AND a.ITEM_DESCRIPTION like #{itemDescription,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    
+</mapper>

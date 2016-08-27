@@ -1,0 +1,235 @@
+<#-- 
+ * description: 修改水果页面
+ * version: 1.0 
+ * author:Clerifen Li
+ * #{copyright}#
+ * 
+-->
+<#include "../include/head.html">
+<body style="padding: 15px">
+<script src="${base.contextPath}/common/code?yesno=SYS.YES_NO&lovTypes=SYS.LOV_EDITOR_TYPE&alignType=SYS.ALIGN_TYPE"
+        type="text/javascript"></script>
+<form id="mainform" method="post" enctype="application/json;charset=UTF-8">
+    <input type="hidden" name="lovItems" id="lovItems" value=""/>
+</form>
+<form id="queryEditor" style="display:none"></form>
+<div id="lovItemGrid" style="margin-left: 2px; margin-top: 2px;"></div>
+	<script type="text/javascript">
+
+    //将value转换成小写
+    if (lovTypes) {
+        $.each(lovTypes, function (i, n) {
+            n.value = n.value.toLowerCase();
+        })
+    }
+
+    //保存lov配置信息.
+    function saveLov() {
+        Hap.submitForm({
+            form    : form,
+            grid    : lovItemGrid,
+            gridName: 'lovItems',
+            url     : '${base.contextPath}/ass/order/submitline',
+            success : function (json, opt) {
+                $.ligerDialog.success("<@spring.message "hap.tip.success"/>", '<@spring.message "hap.tip.info"/>', function () {
+                	location.href='order.html';
+                });
+
+            }
+        });
+    }
+
+    //关闭lov配置窗口
+    function closeLovDialog() {
+    	  location.href='order.html';
+    }
+	<#assign isedit = (RequestParameters.isedit!'0')/>
+    //表单底部按钮
+    Hap.setFormDefaultBtn(closeLovDialog, saveLov);
+
+    var mainform = $("#mainform");
+    var form = mainform.ligerForm({
+        inputWidth: 250,
+        fields    : [{
+            name: 'orderNumber',
+            type: 'hidden'
+        }, {
+            display : '<@spring.message "lov.orderNumber"/>',
+            name    : "orderNumber",
+            type    : "text",
+            newline : true,
+            validate: {
+                required: true
+            }
+        }, {
+            display: '<@spring.message "lov.companyName"/>',
+            name   : "companyName",
+            type   : "text",
+            newline: false
+        }, {
+            display : '<@spring.message "lov.customerName"/>',
+            name    : "customerName",
+            type    : "text",
+            newline : false,
+            validate: {
+                required: true
+            }
+        }, {
+            display : '<@spring.message "lov.orderDate"/>',
+            name    : "orderDate",
+            type    : "text",
+            newline : true,
+            validate: {
+                required: true
+            }
+        }, {
+            display : '<@spring.message "lov.sals"/>',
+            name    : "sals",
+            type    : "text",
+            newline : false,
+            validate: {
+                required: true
+            }
+        }, {
+            display: '<@spring.message "lov.orderStatus"/>',
+            newline: false,
+            name   : "orderStatus",
+            type   : "text"
+        }],
+        buttons : [ {
+            text : '<@spring.message "hap.save"/>',
+            disabled : false,
+            width : 60,
+            click : function() {
+
+            }
+        },{
+            text : '<@spring.message "hap.submit"/>',
+            disabled : false,
+            width : 60,
+            click : function() {
+            }
+        },{
+          	 text : '审批',
+             disabled : false,
+             width : 60,
+             click : function() {
+             }   	
+        },{
+          	 text : '拒绝',
+             disabled : false,
+             width : 60,
+             click : function() {
+             }   	
+        },{
+          	 text : '整单删除',
+             disabled : false,
+             width : 60,
+             click : function() {
+             }   	
+        },{
+          	 text : '单据打印',
+             disabled : false,
+             width : 60,
+             click : function() {
+             }   	
+        },{
+          	 text : '返回',
+             disabled : false,
+             width : 60,
+             click : function() {
+             }   	
+        }]
+    });
+
+//     mainform.attr("action", "${base.contextPath}/sys/code/submit");
+    lovItemGrid = $("#lovItemGrid").ligerGrid({
+        columns    : [{
+            display: '行号',
+            name   : 'lineNumber',
+            width  : 200,
+            align  : 'left',
+            editor : {
+                type: 'text'
+            }
+        }, {
+            display: '物料编码',
+            name   : 'itemCode',
+            width  : 200,
+            align  : 'left',
+            editor : {
+                type: 'text'
+            }
+        },  {
+            display: '物料描述',
+            name   : 'itemDescription',
+            width  : 200,
+            align  : 'left',
+            editor : {
+                type: 'text'
+            }
+        },{
+            display: '产品单位',
+            name   : 'orderQuantityUom',
+            width  : 200,
+            editor : {
+            	type: 'text',
+            }
+        }, {
+            display  : '数量',
+            name     : 'orderQuantity',
+            width    : 200
+        }, {
+            display: '销售单价',
+            name   : 'unitSellingPrice',
+            width  : 200,
+            editor : {
+            	type: 'text',
+            }
+        }, {
+            display: '金额',
+            name   : 'sals',
+            width  : 200,
+            type: 'text'
+        },{
+            display: '备注',
+            name   : 'descrition',
+            width  : 200,
+            editor : {
+            	type: 'text',
+            }
+        }],
+        width      : '99%',
+        height     : 240,
+        usePager   : false,
+        enabledEdit: true,
+        checkbox   : true,
+        url        : '${base.contextPath}/ass/order/line?orderNumber=${RequestParameters.orderNumber}',
+        toolbar    : {
+            items: [{
+                text   : '<@spring.message "hap.new"/>',
+                disable: false,
+                click  : function () {
+                    lovItemGrid.addRow({})
+                },
+                icon   : 'add'
+            }, {
+                line: true
+            }, {
+                text : '<@spring.message "hap.delete"/>',
+                click: function () {
+                    Hap.gridDelete({
+                        grid: lovItemGrid,
+                        url : '${base.contextPath}/sys/lovitem/remove'
+                    })
+
+                },
+                icon : 'delete'
+            }]
+        }
+    });
+    Hap.loadForm({form: form, url: '${base.contextPath}/ass/order/query', para: {orderNumber:${RequestParameters.orderNumber}}})
+//     Hap.loadForm({form: dataForm, url:'${base.contextPath}/ass/order/query',para:{orderNumber:${RequestParameters.orderNumber}}});
+    </script>
+</body>
+</html>

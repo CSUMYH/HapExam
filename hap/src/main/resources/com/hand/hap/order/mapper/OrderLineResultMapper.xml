@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ #{copyright}#
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.hap.order.mapper.OrderLineResultMapper">
+    <resultMap id="BaseResultMap" type="com.hand.hap.order.dto.OrderLineResult" extends="com.hand.hap.mapper.StdMapper.STD">
+   	    <result column="HEADER_ID" property="headerId" jdbcType="DECIMAL"/>
+   	     <result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR"/>
+   	    <result column="LINE_NUMBER" property="lineNumber" jdbcType="DECIMAL"/>
+   	     <result column="ITEM_CODE" property="itemCode" jdbcType="VARCHAR"/>
+        <result column="INVENTORY_ITEM_ID" property="inventoryItemId" jdbcType="DECIMAL"/>
+        <result column="ITEM_DESCRIPTION" property="itemDescription" jdbcType="VARCHAR"/>
+        <result column="ORDER_QUANTITY_UOM" property="orderQuantityUom" jdbcType="VARCHAR"/>
+        <result column="ORDERD_QUANTITY" property="orderQuantity" jdbcType="DECIMAL"/>
+		<result column="UNIT_SELLING_PRICE" property="unitSellingPrice" jdbcType="DECIMAL"/>
+		<result column="sals" property="sals" jdbcType="DECIMAL"/>
+		<result column="DESCRIPTION" property="descrition" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	<select id="selectByOrderHeader" parameterType="com.hand.hap.order.dto.OrderLineResult" resultMap="BaseResultMap">
+		select * from (SELECT ho.LINE_NUMBER, h.ORDER_NUMBER, hm.INVENTORY_ITEM_ID, hm.ITEM_CODE,hm.ITEM_DESCRIPTION,ho.ORDER_QUANTITY_UOM,ho.ORDERD_QUANTITY,ho.UNIT_SELLING_PRICE,ho.ORDERD_QUANTITY*ho.UNIT_SELLING_PRICE as sals ,ho.DESCRIPTION
+	    FROM hap_inv_inventory_items hm,hap_om_order_lines ho, hap_om_order_headers h 
+	    WHERE hm.INVENTORY_ITEM_ID=ho.INVENTORY_ITEM_ID and h.HEADER_ID= ho.HEADER_ID) as a
+		<where>
+        	<if test="orderNumber !=null">
+                a.ORDER_NUMBER like #{orderNumber,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </select>
+   
+</mapper>

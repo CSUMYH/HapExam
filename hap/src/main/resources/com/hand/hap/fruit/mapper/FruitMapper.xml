@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ #{copyright}#
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.hap.fruit.mapper.FruitMapper">
+    <resultMap id="BaseResultMap" type="com.hand.hap.fruit.dto.Fruit" extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="FRUIT_ID" property="fruitId" jdbcType="DECIMAL"/>
+        <result column="FRUIT_NAME" property="fruitName" jdbcType="VARCHAR"/>
+        <result column="FRUIT_CODE" property="fruitCode" jdbcType="VARCHAR"/>
+        <result column="FRUIT_DESCRIPTION" property="fruitDescription" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	<select id="selectByFruit" parameterType="com.hand.hap.fruit.dto.Fruit" resultMap="BaseResultMap">
+		SELECT f.fruit_id,
+		       f.fruit_name,
+		       f.fruit_code,
+		       fl.fruit_description
+		  FROM fruit_b f
+		   left join fruit_tl fl
+		      on f.fruit_id = fl.fruit_id
+		      and fl.lang = #{request.locale,jdbcType=VARCHAR}
+		<where>
+        	<if test="fruitId != null">
+                and f.fruit_id = #{fruitId,jdbcType=DECIMAL}
+            </if>
+            <if test="fruitName != null">
+                AND f.fruit_name like #{fruitName,jdbcType=VARCHAR}
+            </if>
+            <if test="fruitDescription != null">
+                AND f.fruit_description like #{fruitDescription,jdbcType=VARCHAR}
+            </if>
+            <if test="fruitCode != null">
+                AND f.fruit_code like #{fruitCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    
+     <insert id="insertFruit" parameterType="com.hand.hap.fruit.dto.Fruit" >
+<!--     <selectKey resultType="Long" keyProperty="fruitId" -->
+<!--         order="BEFORE"> -->
+<!--         select -->
+<!--         fruit_b_s.nextVal -->
+<!--         from dual -->
+<!--     </selectKey> -->
+    INSERT INTO fruit_b
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fruitId != null" >
+        FRUIT_ID,
+      </if>
+      <if test="fruitName != null" >
+        FRUIT_NAME,
+      </if>
+      <if test="fruitDescription != null" >
+        FRUIT_DESCRIPTION,
+      </if>
+      <if test="fruitCode != null" >
+        FRUIT_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fruitId != null" >
+        #{fruitId,jdbcType=DECIMAL},
+      </if>
+      <if test="fruitName != null" >
+        #{fruitName,jdbcType=VARCHAR},
+      </if>
+      <if test="fruitDescription != null" >
+        #{fruitDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="fruitCode != null" >
+        #{fruitCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+    
+    <update id="updateFruit" parameterType="com.hand.hap.fruit.dto.Fruit" >
+    update fruit_b
+    <set >
+      <if test="fruitName != null" >
+        FRUIT_NAME = #{fruitName,jdbcType=VARCHAR},
+      </if>
+      <if test="fruitCode != null" >
+        FRUIT_CODE = #{fruitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fruitDescription != null" >
+        FRUIT_DESCRIPTION = #{fruitDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FRUIT_ID = #{fruitId,jdbcType=DECIMAL}
+  </update>
+  
+  <delete id="deleteByFruitId" parameterType="com.hand.hap.fruit.dto.Fruit" >
+    delete from fruit_b  where FRUIT_ID= #{fruitId,jdbcType=DECIMAL}
+  </delete>
+</mapper>

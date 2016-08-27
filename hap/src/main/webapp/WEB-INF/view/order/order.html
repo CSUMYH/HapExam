@@ -1,0 +1,304 @@
+<#--
+ * description: Fruit.html
+ * version: 1.0 
+ * author:taotao.xu@hand-china.com
+ * #{copyright}#
+ * 
+-->
+<#include "../include/head.html">
+<body style="padding: 10px;">
+	<form id="fruitForm"></form>
+    <div id="fruitGrid" style="margin: 0; padding: 0"></div>
+    <script type="text/javascript">
+    
+    $(function() {
+        
+    	debugger;
+        window['fruitForm'] = $("#fruitForm").ligerForm({
+            fields : [ {
+                display  : '<@spring.message "com.hand.hap.order.companyName"/>',
+                name     : 'customerId',
+//                 textField: 'parentFunctionName',
+                type     : "popup",
+                newline  : false,
+                options  : {
+                    type      : 'popup',
+                    valueField: 'companyId',
+                    textField : 'companyName',
+                    grid      : {
+                        columns: [{
+                            display: '<@spring.message "com.hand.hap.order.companyCode"/>',
+                            name   : "companyCode",
+                            align  : 'left',
+                            width  : 200
+                        }, {
+                            display: '<@spring.message "com.hand.hap.order.companyName"/>',
+                            name   : "companyName",
+                            align  : 'left',
+                            width  : 200
+                        }],
+                        url : '${base.contextPath}/ass/order/query',
+	                    height : 350
+                    },
+                    condition : {
+                        inputWidth: 150,
+                        labelWidth: 70,
+                        fields    : [{
+                            display: '<@spring.message "com.hand.hap.order.companyCode"/>',
+                            name   : "companyCode",
+                            newline: true,
+                            type   : "text"
+                        }, {
+                            display: '<@spring.message "com.hand.hap.order.companyName"/>',
+                            name   : "companyName",
+                            newline: false,
+                            type   : "text"
+                        }]
+                    }
+                }
+            }, {
+                type : 'popup',
+                label : '<@spring.message "com.hand.hap.order.customerName"/>',
+                name : 'complanyBy',
+                newline : false,
+                width: 120,
+                options  : {
+                    type      : 'popup',
+                    valueField: 'customerId',
+                    textField : 'customerName',
+                    grid      : {
+                        columns: [{
+                            display: '<@spring.message "com.hand.hap.order.customerCode"/>',
+                            name   : "customerCode",
+                            align  : 'left',
+                            width  : 200
+                        }, {
+                            display: '<@spring.message "com.hand.hap.order.customerName"/>',
+                            name   : "customerName",
+                            align  : 'left',
+                            width  : 200
+                        }],
+                               url : '${base.contextPath}/ass/order/query',
+	                    height : 350
+                    },
+                    condition : {
+                        inputWidth: 150,
+                        labelWidth: 70,
+                        fields    : [{
+                            display: '<@spring.message "com.hand.hap.order.customerCode"/>',
+                            name   : "customerCode",
+                            newline: true,
+                            type   : "text"
+                        }, {
+                            display: '<@spring.message "function.customerName"/>',
+                            name   : "customerName",
+                            newline: false,
+                            type   : "text"
+                        }]
+                    }
+                }
+            },{
+                type : 'text',
+                label : '<@spring.message "com.hand.hap.order.orderId"/>',
+                name : 'orderStatus',
+                newline : false,
+                width: 120
+            },{
+                type : 'popup',
+                label : '<@spring.message "com.hand.hap.order.itemDescription"/>',
+                name : 'headerId',
+                newline : true,
+                width: 120,
+                options  : {
+                    type      : 'popup',
+                    valueField: 'inventoryItemId',
+                    textField : 'itemDescription',
+                    grid      : {
+                        columns: [{
+                            display: '<@spring.message "com.hand.hap.order.itemCode"/>',
+                            name   : "itemCode",
+                            align  : 'left',
+                            width  : 200
+                        }, {
+                            display: '<@spring.message "com.hand.hap.order.itemDescription"/>',
+                            name   : "itemDescription",
+                            align  : 'left',
+                            width  : 200
+                        }],
+                        url : '${base.contextPath}/ass/order/query',
+	                    height : 350
+                    },
+                    condition : {
+                        inputWidth: 150,
+                        labelWidth: 70,
+                        fields    : [{
+                            display: '<@spring.message "com.hand.hap.order.itemCode"/>',
+                            name   : "itemCode",
+                            newline: true,
+                            type   : "text"
+                        }, {
+                            display: '<@spring.message "com.hand.hap.order.itemDescription"/>',
+                            name   : "itemDescription",
+                            newline: false,
+                            type   : "text"
+                        }]
+                    }
+                }
+            },{
+                type : 'text',
+                label : '<@spring.message "com.hand.hap.order.orderStatus"/>',
+                name : 'fruitDescription',
+                newline : false,
+                width: 120,
+            }
+//             ,{
+//                 type : 'select',
+//                 label : '语言',
+//                 name : 'lang',
+//                 newline : false,
+//                 options : {
+//                     valueFieldID : "customerId",
+//                     valueField : "langCode",
+//                     textField : "description",
+//                     data : languageData
+//                 }
+//             }
+            ],
+            buttons : [ {
+                text : '<@spring.message "hap.query"/>',
+                disabled : false,
+                width : 60,
+                click : function() {
+                    Hap.gridQuery({
+                        form : fruitForm,
+                        grid : fruitGrid
+                    })
+                }
+            },{
+                text : '<@spring.message "hap.reset"/>',
+                disabled : false,
+                width : 60,
+                click : function() {
+                }
+            },{
+              	 text : '导出Excel',
+                 disabled : false,
+                 width : 60,
+                 click : function() {
+                 }   	
+            }]
+        
+        });
+
+        window['fruitGrid'] = $("#fruitGrid").ligerGrid({
+            unSetValidateAttr : false,
+            columns : [ {
+                display : '销售订单号',
+                name : 'orderNumber',
+                align : 'left',
+                width : 120,
+                render:function(item){
+                    return '<a href="${base.contextPath}/order/orderLine.html?orderNumber='+item.orderNumber+'">'+item.orderNumber + '</a>';
+                }
+            },{
+                display : '公司名称',
+                name : 'companyName',
+                align : 'left',
+                width : 120,
+//                 validate: {
+//                     required: true
+//                 }
+            },{
+                display : '客户名称',
+                name : 'customerName',
+                align : 'left',
+                width : 120,
+            },{
+                display : '订单日期',
+                name : 'orderDate',
+                align : 'left',
+                width : 120,
+                editor : {
+                    type : 'text'
+                },
+            }, {
+                display : '订单状态',
+                name : 'orderStatus',
+                align : 'left',
+                width : 150,
+            },{
+                display : '订单金额',
+                name : 'sals',
+                align : 'left',
+                width : 120,
+            }
+//             ,{
+//                 display : '<@spring.message "resource.resourceitem"/>',
+//                 width : 100,
+//                 align : 'center',
+//                 render : function(rowdata) {
+//                     if (rowdata.fruitId) {
+//                         return '<a href="javascript:void(0);" onclick="editFruitItem(' + rowdata.fruitId + ')"><@spring.message "hap.edit"/></a>'
+//                     }
+//                 }
+// 			} 
+            
+            ],
+            url : '${base.contextPath}/ass/order/query',
+            toolbar : {
+                items : [ {
+                    text : '<@spring.message "hap.new"/>',
+                    disable : false,
+                    click : function() {
+//                         fruitGrid.addRow({})
+                    	   location.href='orderLine.html?orderNumber=null';
+                    },
+                    icon : 'add'
+                }, {
+                    line : true
+                }
+//                 , {
+//                     text : '<@spring.message "hap.delete"/>',
+//                     click : function() {
+//                        	    Hap.gridDelete({
+//                             grid : fruitGrid,
+//                             url : '${base.contextPath}/ass/fruit/delete'
+//                         }) 
+//                     	fruitGrid.deleteSelectedRow();
+//                     },
+//                     icon : 'delete'
+//                 }, {
+//                     line : true
+//                 }, {
+//                     text : '<@spring.message "hap.save"/>',
+//                     click : function() {
+//                         Hap.gridSave({
+//                             grid : fruitGrid,
+//                             url : '${base.contextPath}/ass/fruit/submit'
+//                         })
+//                     },
+//                     icon : 'save'
+//                 }
+                
+                ]
+            },
+            enabledEdit : true,
+            width : '99%',
+            height : '98%',
+            checkbox : true
+        });
+    });
+    
+    
+    Hap.setFormDefaultBtn(closeUploadDialog, function(){
+        if(Hap.validateForm(attForm)) {
+            uploader.option('formData', {
+                sourceType: attForm.getData().sourceType,
+                sourceKey: '1' 
+            });
+            uploader.upload();
+        }
+    });
+    </script>
+</body>
+</html>

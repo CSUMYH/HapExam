@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ #{copyright}#
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.hap.account.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.hand.hap.account.dto.Role" extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL"/>
+        <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR"/>
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR"/>
+        <result column="ROLE_DESCRIPTION" property="roleDescription" jdbcType="VARCHAR"/>
+
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ROLE_ID, ROLE_CODE, ROLE_NAME, ROLE_DESCRIPTION
+    </sql>
+
+    <select id="selectRoleNotUserRoles" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select b.role_id, b.role_code, tl.role_name, tl.ROLE_DESCRIPTION
+        from sys_role_tl tl, sys_role_b b
+         where
+            b.role_id not in (select role_id from sys_user_role where user_id = #{userId,jdbcType=DECIMAL,javaType=java.lang.Long})
+            and tl.role_id = b.role_id
+            and tl.lang = #{request.locale,jdbcType=VARCHAR,javaType=java.lang.String}
+        order by b.role_id
+    </select>
+    <select id="selectUserRoles" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select b.role_id, b.role_code, tl.role_name, tl.role_description
+        from sys_role_tl tl, sys_role_b b
+        where b.role_id in (select role_id from sys_user_role where user_id = #{userId,jdbcType=DECIMAL,javaType=java.lang.Long})
+        and tl.role_id = b.role_id
+        and tl.lang = #{request.locale,jdbcType=VARCHAR,javaType=java.lang.String}
+        order by b.role_id
+    </select>
+
+    <select id="selectUserRoleCount" resultType="int">
+        select count(1) from sys_user_role t where t.user_id = #{0} and t.role_id = #{1}
+    </select>
+
+
+    <select id="selectByUser" resultMap="BaseResultMap" parameterType="com.hand.hap.account.dto.User" >
+        SELECT sur.role_id, sr_tl.role_name
+          FROM sys_user_role sur
+          LEFT OUTER JOIN sys_role_tl sr_tl
+            on (sur.role_id = sr_tl.role_id AND
+                 sr_tl.lang = #{request.locale,jdbcType=VARCHAR})
+           WHERE sur.user_id = #{userId, jdbcType = DECIMAL}
+           order by sur.role_id
+    </select>
+
+    <select id="selectRolesByUserWithoutLang" resultMap="BaseResultMap" parameterType="com.hand.hap.account.dto.User" >
+        SELECT sur.role_id
+          FROM sys_user_role sur
+         WHERE sur.user_id = #{userId, jdbcType = DECIMAL}
+    </select>
+</mapper>
