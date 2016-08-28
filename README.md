@@ -4,4 +4,4 @@
 2.订单汇总页面在webapp/WEB-INF/view/order/order.html
 3.订单明细页面在webapp/WEB-INF/view/order/orderLine.html
 4.Mapper.xml文件在main/resources/com/hand/hap/order/mapper目录下
-6.此项目实现订单的基本查询
+6.此项目实现了订单的基本查询
