@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hand.hap.account.dto.User;
 import com.hand.hap.core.IRequest;
 import com.hand.hap.core.exception.BaseException;
-import com.hand.hap.fruit.dto.Fruit;
-import com.hand.hap.order.dto.OrderHeaders;
 import com.hand.hap.order.dto.OrderResult;
 import com.hand.hap.order.service.IOrderHeadersService;
 import com.hand.hap.system.controllers.BaseController;
@@ -29,7 +26,7 @@ public class OrderController extends BaseController{
 
     @Autowired
     private IOrderHeadersService OrderHeadersService;
-	
+
 	  @RequestMapping(value = "/ass/order/query")
 	    @ResponseBody
 	    public ResponseData getTasks(OrderResult OrderResult, @RequestParam(defaultValue = DEFAULT_PAGE) int page,
@@ -51,9 +48,16 @@ public class OrderController extends BaseController{
 	            return rd;
 	        } else {
 	            IRequest requestCtx = createRequestContext(request);
+	            System.out.println(OrderResult.get(0).getOrderNumber());
+	            System.out.println(OrderResult.get(0).getOrderDate());
+	            System.out.println(OrderResult.get(0).getCustomerName());
+	            System.out.println(OrderResult.get(0).getSals());
+	            System.out.println(OrderResult.get(0).getOrderStatus());
+	            System.out.println(OrderResult.get(0).getCompanyName());
 	            OrderHeadersService.batchUpdate(requestCtx, OrderResult);
 	            return new ResponseData(OrderResult);
 	        }
 	    }
+	  
 	    
 }

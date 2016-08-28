@@ -29,7 +29,7 @@
             form    : form,
             grid    : lovItemGrid,
             gridName: 'lovItems',
-            url     : '${base.contextPath}/ass/order/submitline',
+            url     : '${base.contextPath}/ass/order/submit1',
             success : function (json, opt) {
                 $.ligerDialog.success("<@spring.message "hap.tip.success"/>", '<@spring.message "hap.tip.info"/>', function () {
                 	location.href='order.html';
@@ -65,7 +65,10 @@
             display: '<@spring.message "lov.companyName"/>',
             name   : "companyName",
             type   : "text",
-            newline: false
+            newline: false,
+            validate: {
+                required: true
+            }
         }, {
             display : '<@spring.message "lov.customerName"/>',
             name    : "customerName",
@@ -87,9 +90,7 @@
             name    : "sals",
             type    : "text",
             newline : false,
-            validate: {
-                required: true
-            }
+
         }, {
             display: '<@spring.message "lov.orderStatus"/>',
             newline: false,
@@ -159,38 +160,47 @@
             align  : 'left',
             editor : {
                 type: 'text'
-            }
+            },
+            validate: {
+            required: true
+        } 
         },  {
             display: '物料描述',
             name   : 'itemDescription',
             width  : 200,
             align  : 'left',
-            editor : {
-                type: 'text'
-            }
         },{
             display: '产品单位',
             name   : 'orderQuantityUom',
             width  : 200,
-            editor : {
-            	type: 'text',
-            }
         }, {
             display  : '数量',
             name     : 'orderQuantity',
-            width    : 200
+            width    : 200,
+            editor : {
+            	type: 'text',
+            },
+            validate: {
+                required: true
+            }
         }, {
             display: '销售单价',
             name   : 'unitSellingPrice',
             width  : 200,
             editor : {
             	type: 'text',
-            }
+            },
+             validate: {
+            required: true
+           }
         }, {
             display: '金额',
             name   : 'sals',
             width  : 200,
-            type: 'text'
+            type: 'text',
+            validate: {
+                required: true
+            }
         },{
             display: '备注',
             name   : 'descrition',

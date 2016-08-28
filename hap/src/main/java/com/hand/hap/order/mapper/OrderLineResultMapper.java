@@ -11,8 +11,7 @@ import com.hand.hap.order.dto.OrderLineResult;
 	 */
 	public interface OrderLineResultMapper extends Mapper<OrderLineResult> {
 
-	    List<OrderLineResult> selectByOrderHeader(OrderLineResult OrderLineResult);
-	   
+	    List<OrderLineResult> selectByOrderHeader(OrderLineResult OrderLineResult);  
 
 	}
 

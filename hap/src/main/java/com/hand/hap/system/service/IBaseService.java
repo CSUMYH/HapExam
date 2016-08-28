@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hand.hap.core.IRequest;
 import com.hand.hap.core.annotation.StdWho;
-import com.hand.hap.fruit.dto.Fruit;
-import com.hand.hap.function.dto.Resource;
 
 /**
  * @author shengyang.zhou@hand-china.com
